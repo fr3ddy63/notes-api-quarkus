@@ -1,7 +1,5 @@
 package de.home.quarkus.users;
 
-import javax.enterprise.inject.Default;
-import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -42,14 +40,8 @@ public class UsersResource {
     @Path("/{username}")
     public UserResource getUserResource(@Context ResourceContext context, @PathParam("username") String username) {
 
-//        UserResource userResource = context.getResource(UserResource.class);
-//        userResource.setUser(this.service.findByName(username).orElseThrow(NotFoundException::new));
-//        return userResource;
-
-        UserResource userResource = CDI.current().select(UserResource.class).get();
+        UserResource userResource = context.getResource(UserResource.class);
         userResource.setUser(this.service.findByName(username).orElseThrow(NotFoundException::new));
         return userResource;
-
-//        return new UserResource(this.service.findByName(username).orElseThrow(NotFoundException::new));
     }
 }

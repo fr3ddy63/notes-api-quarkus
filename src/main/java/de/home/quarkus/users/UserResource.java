@@ -4,7 +4,6 @@ import de.home.quarkus.notes.UserNotesResource;
 import io.quarkus.arc.Unremovable;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.container.ResourceContext;
@@ -22,14 +21,6 @@ public class UserResource {
     UserService service;
 
     private User user;
-
-//    public UserResource(User user) {
-//
-//        this.user = user;
-//    }
-
-    public UserResource() {
-    }
 
     public void setUser(User user) {
         this.user = user;
@@ -51,11 +42,7 @@ public class UserResource {
     @Path("/notes")
     public UserNotesResource getNotes(@Context ResourceContext context) {
 
-//        UserNotesResource userNotesResource = context.getResource(UserNotesResource.class);
-//        userNotesResource.setUser(this.user);
-//        return userNotesResource;
-
-        UserNotesResource userNotesResource = CDI.current().select(UserNotesResource.class).get();
+        UserNotesResource userNotesResource = context.getResource(UserNotesResource.class);
         userNotesResource.setUser(this.user);
         return userNotesResource;
     }

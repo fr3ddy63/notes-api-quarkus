@@ -3,6 +3,8 @@ package de.home.quarkus.notes;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ResourceContext;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -21,8 +23,10 @@ public class NotesResource {
     }
 
     @Path("/{id}")
-    public NoteResource getNoteResource(@PathParam("id") Long id) {
+    public NoteResource getNoteResource(@Context ResourceContext context, @PathParam("id") Long id) {
 
-        return new NoteResource(this.service.find(id).orElseThrow(NotFoundException::new));
+        NoteResource noteResource = context.getResource(NoteResource.class);
+        noteResource.setNote(this.service.find(id).orElseThrow(NotFoundException::new));
+        return noteResource;
     }
 }

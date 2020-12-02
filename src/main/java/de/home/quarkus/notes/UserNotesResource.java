@@ -24,14 +24,6 @@ public class UserNotesResource {
 
     private User user;
 
-//    public UserNotesResource(User user) {
-//
-//        this.user = user;
-//    }
-
-    public UserNotesResource() {
-    }
-
     public void setUser(User user) {
 
         this.user = user;

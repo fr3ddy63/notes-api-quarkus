@@ -12,10 +12,9 @@ public class NoteResource {
     @Inject
     NoteService service;
 
-    private final Note note;
+    private Note note;
 
-    public NoteResource(Note note) {
-
+    public void setNote(Note note) {
         this.note = note;
     }
 
