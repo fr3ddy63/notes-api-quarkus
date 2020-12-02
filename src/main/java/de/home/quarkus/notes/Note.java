@@ -3,6 +3,7 @@ package de.home.quarkus.notes;
 import de.home.quarkus.common.BaseEntity;
 import de.home.quarkus.users.User;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -27,7 +28,7 @@ public class Note extends BaseEntity<Long> {
     @Size(max = 256)
     private String content;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
 
@@ -37,6 +38,7 @@ public class Note extends BaseEntity<Long> {
             joinColumns = @JoinColumn(name = "note_id"),
             inverseJoinColumns = @JoinColumn(name = "subnote_id")
     )
+    @JsonbTransient
     private List<Note> subnotes;
 
     public Note() {

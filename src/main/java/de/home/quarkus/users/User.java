@@ -3,6 +3,7 @@ package de.home.quarkus.users;
 import de.home.quarkus.common.BaseEntity;
 import de.home.quarkus.notes.Note;
 
+import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -27,6 +28,7 @@ public class User extends BaseEntity<Long> {
     private String password;
 
     @OneToMany(mappedBy = "author")
+    @JsonbTransient
     private List<Note> notes;
 
     public User() {
