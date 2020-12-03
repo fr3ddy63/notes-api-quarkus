@@ -1,5 +1,7 @@
 package de.home.quarkus.notes;
 
+import de.home.quarkus.utility.Links;
+
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -7,6 +9,7 @@ import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 @Path("/notes")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -17,9 +20,14 @@ public class NotesResource {
     NoteService service;
 
     @GET
-    public Response getNotes(@Valid @BeanParam NoteParam param) {
+    public Response getNotes(@Context UriInfo uriInfo, @Valid @BeanParam NoteParam param) {
 
-        return Response.ok(this.service.find(param)).build();
+        long notesCount = this.service.count(param);
+
+        return Response.ok(this.service.find(param))
+                .header("X-Total-Count", notesCount)
+                .links(Links.getPaginationLinks(param, uriInfo, notesCount))
+                .build();
     }
 
     @Path("/{id}")

@@ -1,5 +1,7 @@
 package de.home.quarkus.users;
 
+import de.home.quarkus.utility.Links;
+
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -32,9 +34,14 @@ public class UsersResource {
     }
 
     @GET
-    public Response getUsers(@Valid @BeanParam UserParam param) {
+    public Response getUsers(@Context UriInfo uriInfo, @Valid @BeanParam UserParam param) {
 
-        return Response.ok(this.service.find(param)).build();
+        long usersCount = this.service.count(param);
+
+        return Response.ok(this.service.find(param))
+                .header("X-Total-Count", usersCount)
+                .links(Links.getPaginationLinks(param, uriInfo, usersCount))
+                .build();
     }
 
     @Path("/{username}")

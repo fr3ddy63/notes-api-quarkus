@@ -1,6 +1,7 @@
 package de.home.quarkus.notes;
 
 import de.home.quarkus.users.User;
+import de.home.quarkus.utility.Links;
 import io.quarkus.arc.Unremovable;
 
 import javax.enterprise.context.Dependent;
@@ -44,8 +45,13 @@ public class UserNotesResource {
     }
 
     @GET
-    public Response getUserNotes(@Valid @BeanParam NoteParam param) {
+    public Response getUserNotes(@Context UriInfo uriInfo, @Valid @BeanParam NoteParam param) {
 
-        return Response.ok(this.noteService.findByAuthor(this.user, param)).build();
+        long notesCount = this.noteService.countByAuthor(this.user, param);
+
+        return Response.ok(this.noteService.findByAuthor(this.user, param))
+                .header("X-Total-Count", notesCount)
+                .links(Links.getPaginationLinks(param, uriInfo, notesCount))
+                .build();
     }
 }
